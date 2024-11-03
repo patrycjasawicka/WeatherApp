@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">WeatherApp</string>
+    <string name="weather_icon">Weather Icon</string>
+    <string name="weather">Weather</string>
+    <string name="forecasts">Forecasts</string>
+    <string name="city">City (eg. Warsaw)</string>
+    <string name="check_weather">Check weather</string>
 </resources>

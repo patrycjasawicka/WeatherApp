@@ -27,16 +27,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.weatherapp.R
-import com.example.weatherapp.ui.theme.LightBlue
-import com.example.weatherapp.ui.theme.NavyBlue
-import com.example.weatherapp.ui.theme.Yellow
+import com.example.weatherapp.ui.theme.Colors
+import com.example.weatherapp.ui.theme.Dimens
+import com.example.weatherapp.ui.theme.FontSizes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,13 +45,15 @@ fun MainScreen() {
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
-            .background(brush = Brush.linearGradient(
-                colors = listOf(
-                    NavyBlue,
-                    LightBlue
-                ),
-            ))
-            .padding(16.dp),
+            .background(
+                brush = Brush.linearGradient(
+                    colors = listOf(
+                        Colors.NavyBlue,
+                        Colors.LightBlue
+                    ),
+                )
+            )
+            .padding(Dimens.Medium),
         contentAlignment = Alignment.Center
     ) {
         val screenHeight = maxHeight
@@ -64,63 +65,63 @@ fun MainScreen() {
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.woman_with_umbrella),
-                contentDescription = "Weather Icon",
+                contentDescription = stringResource(R.string.weather_icon),
                 tint = Color.Unspecified,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(screenHeight / 2)
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(Dimens.Large))
 
             Text(
-                text = "Weather",
-                fontSize = 32.sp,
+                text = stringResource(R.string.weather),
+                fontSize = FontSizes.Large,
                 color = Color.White,
                 fontWeight = FontWeight.Bold
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(Dimens.Small))
 
             Text(
-                text = "Forecasts",
-                fontSize = 18.sp,
+                text = stringResource(R.string.forecasts),
+                fontSize = FontSizes.Medium,
                 color = Color.White,
                 fontFamily = FontFamily.SansSerif
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(Dimens.ExtraLarge))
 
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { newText -> searchQuery = newText },
-                placeholder = { Text("City (eg. Warsaw)") },
+                placeholder = { Text(stringResource(R.string.city)) },
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = Dimens.Medium),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = MaterialTheme.colorScheme.primary,
                     unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    containerColor = LightBlue
+                    containerColor = Colors.LightBlue
                 )
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(Dimens.Medium))
 
             Button(
                 onClick = { /* Handle search click action */ },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = Dimens.Medium),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor =Yellow,
+                    containerColor = Colors.Yellow,
                     contentColor = Color.White,
                     disabledContainerColor = Color.Gray,
                     disabledContentColor = Color.LightGray
                 )
             ) {
-                Text(text = "Check weather")
+                Text(text = stringResource(R.string.check_weather))
             }
         }
     }
