@@ -30,18 +30,31 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import com.example.weatherapp.R
+import com.example.weatherapp.navigation.NavigationItem
 import com.example.weatherapp.ui.theme.Colors
 import com.example.weatherapp.ui.theme.Dimens
 import com.example.weatherapp.ui.theme.FontSizes
 
+@Composable
+fun MainScreen(navController: NavHostController) {
+    var searchQuery by remember { mutableStateOf("") }
+    MainScreenContent(
+        searchQuery = searchQuery,
+        onQueryEntered = { newQuery -> searchQuery = newQuery },
+        onButtonClick = { navController.navigate(NavigationItem.Details.getRoute(searchQuery)) }
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
-    var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
-
+fun MainScreenContent(
+    searchQuery: String,
+    onQueryEntered: (String) -> Unit,
+    onButtonClick: () -> Unit
+) {
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
@@ -94,7 +107,7 @@ fun MainScreen() {
 
             OutlinedTextField(
                 value = searchQuery,
-                onValueChange = { newText -> searchQuery = newText },
+                onValueChange = onQueryEntered,
                 placeholder = { Text(stringResource(R.string.city)) },
                 singleLine = true,
                 modifier = Modifier
@@ -110,7 +123,7 @@ fun MainScreen() {
             Spacer(modifier = Modifier.height(Dimens.Medium))
 
             Button(
-                onClick = { /* Handle search click action */ },
+                onClick = onButtonClick,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = Dimens.Medium),
@@ -130,6 +143,5 @@ fun MainScreen() {
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
-    MainScreen()
+    MainScreenContent(searchQuery = "Warsaw", {}, {})
 }
-
