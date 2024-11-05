@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.example.weatherapp.R
+import com.example.weatherapp.domain.fetchLocations
 import com.example.weatherapp.navigation.NavigationItem
 import com.example.weatherapp.ui.theme.Colors
 import com.example.weatherapp.ui.theme.Dimens
@@ -44,7 +45,10 @@ fun MainScreen(navController: NavHostController) {
     MainScreenContent(
         searchQuery = searchQuery,
         onQueryEntered = { newQuery -> searchQuery = newQuery },
-        onButtonClick = { navController.navigate(NavigationItem.Details.getRoute(searchQuery)) }
+        onButtonClick = {
+            fetchLocations()
+            navController.navigate(NavigationItem.Details.getRoute(searchQuery))
+        }
     )
 }
 
