@@ -31,7 +31,7 @@ fun AppNavHost(
             })
         ) { backStackEntry ->
             val city = backStackEntry.arguments?.getString(CITY) ?: ""
-            DetailsScreen(navController, city)
+            DetailsScreen(city)
         }
     }
 }

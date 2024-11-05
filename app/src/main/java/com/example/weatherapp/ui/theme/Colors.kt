@@ -14,4 +14,6 @@ object Colors {
     val Yellow = Color(0xFFFEB034)
     val NavyBlue = Color(0xFF333C65)
     val LightBlue = Color(0xFF8CABAD)
+    val Indigo = Color(0xFF5527A7)
+    val DarkIndigo = Color(0xFF3E2286)
 }

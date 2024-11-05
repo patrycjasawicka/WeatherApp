@@ -7,4 +7,6 @@ object Dimens {
     val Medium = 16.dp
     val Large = 24.dp
     val ExtraLarge = 32.dp
+
+    val RoundedCornersSize = 12.dp
 }
