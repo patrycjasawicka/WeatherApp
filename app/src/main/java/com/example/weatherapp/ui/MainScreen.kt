@@ -37,10 +37,9 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.weatherapp.R
-import com.example.weatherapp.domain.Hint
+import com.example.weatherapp.domain.model.Hint
 import com.example.weatherapp.navigation.NavigationItem
 import com.example.weatherapp.ui.theme.Colors
 import com.example.weatherapp.ui.theme.Dimens
@@ -73,7 +72,7 @@ fun MainScreen(navController: NavHostController, weatherViewModel: WeatherViewMo
         items = items,
         locationIsSelected = locationIsSelected,
         onButtonClick = {
-            weatherViewModel.fetchCurrentConditions()
+            weatherViewModel.fetchDetails()
             navController.navigate(NavigationItem.Details.getRoute(searchQuery))
         }
     )

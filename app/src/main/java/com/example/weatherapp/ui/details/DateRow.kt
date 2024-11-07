@@ -22,7 +22,7 @@ import com.example.weatherapp.ui.theme.Dimens.Medium
 import com.example.weatherapp.ui.theme.Dimens.Small
 
 @Composable
-fun DateRow() {
+fun DateRow(date: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -41,7 +41,7 @@ fun DateRow() {
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "July, 11",
+                text = date,
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold

@@ -12,9 +12,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.weatherapp.ui.details.AdditionalWeatherInfo
-import com.example.weatherapp.ui.details.Pressure
 import com.example.weatherapp.ui.details.DayWeatherForecast
 import com.example.weatherapp.ui.details.MainWeatherInfo
+import com.example.weatherapp.ui.details.Pressure
 import com.example.weatherapp.ui.details.WeekWeatherForecast
 import com.example.weatherapp.ui.theme.Colors.Indigo
 import com.example.weatherapp.ui.theme.Dimens.ExtraLarge
@@ -25,6 +25,7 @@ import com.example.weatherapp.ui.theme.Dimens.Medium
 fun DetailsScreen(city: String, weatherViewModel: WeatherViewModel) {
 
     val currentConditions by weatherViewModel.currentConditions.collectAsState()
+    val dailyForecast by weatherViewModel.hourlyForecast.collectAsState()
 
     Column(
         modifier = Modifier
@@ -41,7 +42,9 @@ fun DetailsScreen(city: String, weatherViewModel: WeatherViewModel) {
 
         Spacer(modifier = Modifier.height(ExtraLarge))
 
-        DayWeatherForecast()
+        dailyForecast?.let { forecast ->
+            DayWeatherForecast(forecast)
+        }
 
         Spacer(modifier = Modifier.height(Medium))
 
