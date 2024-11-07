@@ -1,14 +1,22 @@
 package com.example.weatherapp.data.model
 
+import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Location(
-    val Version: Int,
-    val Key: String,
-    val Type: String,
-    val Rank: Int,
-    val LocalizedName: String,
-    val Country: Country,
-    val AdministrativeArea: AdministrativeArea
+    @Json(name = "Version")
+    val version: Int,
+    @Json(name = "Key")
+    val key: String,
+    @Json(name = "Type")
+    val type: String,
+    @Json(name = "Rank")
+    val rank: Int,
+    @Json(name = "LocalizedName")
+    val localizedName: String,
+    @Json(name = "Country")
+    val country: Country,
+    @Json(name = "AdministrativeArea")
+    val administrativeArea: AdministrativeArea
 )

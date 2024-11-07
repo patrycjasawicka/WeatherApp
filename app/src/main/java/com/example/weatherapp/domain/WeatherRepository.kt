@@ -1,6 +1,7 @@
 package com.example.weatherapp.domain
 
 import com.example.weatherapp.data.WeatherClient
+import com.example.weatherapp.data.model.Location
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -8,12 +9,9 @@ import javax.inject.Inject
 
 class WeatherRepository @Inject constructor() {
 
-    fun fetchLocations(query: String = "warsaw") {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val locations = WeatherClient.apiService.getLocations(query)
-            } catch (e: Exception) {
-            }
-        }
+    suspend fun fetchLocations(query: String): Result<List<Location>> = try {
+        Result.success(WeatherClient.apiService.getLocations(query))
+    } catch (e: Exception) {
+        Result.failure(e)
     }
 }

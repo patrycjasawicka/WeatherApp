@@ -1,6 +1,7 @@
 package com.example.weatherapp.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,6 +21,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,31 +36,47 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.weatherapp.R
 import com.example.weatherapp.navigation.NavigationItem
 import com.example.weatherapp.ui.theme.Colors
 import com.example.weatherapp.ui.theme.Dimens
 import com.example.weatherapp.ui.theme.FontSizes
+import kotlinx.coroutines.delay
 
 @Composable
 fun MainScreen(navController: NavHostController, weatherViewModel: WeatherViewModel) {
     var searchQuery by remember { mutableStateOf("") }
+    var debouncedQuery by remember { mutableStateOf("") }
+    val items by weatherViewModel.items.collectAsState()
+
+    LaunchedEffect(searchQuery) {
+        delay(500)
+        debouncedQuery = searchQuery
+    }
+
+    LaunchedEffect(debouncedQuery) {
+        weatherViewModel.fetchLocations(debouncedQuery)
+    }
+
     MainScreenContent(
         searchQuery = searchQuery,
         onQueryEntered = { newQuery -> searchQuery = newQuery },
+        onHintSelected = {hint -> searchQuery = hint},
+        items = items,
         onButtonClick = {
-            weatherViewModel.fetchLocations()
             navController.navigate(NavigationItem.Details.getRoute(searchQuery))
         }
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreenContent(
     searchQuery: String,
     onQueryEntered: (String) -> Unit,
+    onHintSelected: (String) -> Unit,
+    items: List<String>,
     onButtonClick: () -> Unit
 ) {
     BoxWithConstraints(
@@ -108,20 +129,7 @@ fun MainScreenContent(
 
             Spacer(modifier = Modifier.height(Dimens.ExtraLarge))
 
-            OutlinedTextField(
-                value = searchQuery,
-                onValueChange = onQueryEntered,
-                placeholder = { Text(stringResource(R.string.city)) },
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = Dimens.Medium),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    containerColor = Colors.LightBlue
-                )
-            )
+            DropdownTextField(searchQuery, onQueryEntered, onHintSelected, items)
 
             Spacer(modifier = Modifier.height(Dimens.Medium))
 
@@ -143,8 +151,42 @@ fun MainScreenContent(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DropdownTextField(
+    searchQuery: String,
+    onQueryEntered: (String) -> Unit,
+    onHintSelected: (String) -> Unit,
+    items: List<String>
+) {
+    Column(modifier = Modifier.padding(horizontal = Dimens.Medium)) {
+
+        OutlinedTextField(
+            value = searchQuery,
+            onValueChange = onQueryEntered,
+            placeholder = { Text(stringResource(R.string.city)) },
+            singleLine = true,
+            modifier = Modifier
+                .fillMaxWidth(),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                containerColor = Colors.LightBlue
+            )
+        )
+
+        LazyColumn(modifier = Modifier.height(160.dp)) {
+            items(items) { item ->
+                Text(text = item, modifier = Modifier
+                    .padding(8.dp)
+                    .clickable { onHintSelected(item) })
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
-    MainScreenContent(searchQuery = "Warsaw", {}, {})
+    MainScreenContent(searchQuery = "Warsaw", {}, {}, emptyList(), {})
 }
