@@ -20,7 +20,7 @@ import com.example.weatherapp.ui.theme.Dimens.Large
 import com.example.weatherapp.ui.theme.Dimens.Medium
 
 @Composable
-fun DetailsScreen(city: String) {
+fun DetailsScreen(city: String, weatherViewModel: WeatherViewModel) {
 
     Column(
         modifier = Modifier

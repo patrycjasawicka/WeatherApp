@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     kotlin("kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 val localProperties = Properties().apply {
@@ -82,7 +83,12 @@ dependencies {
     implementation(libs.moshi)
     implementation(libs.moshi.kotlin)
     kapt(libs.moshi.kotlin.codegen)
-    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2")
+    implementation(libs.logging.interceptor)
+
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+    kapt(libs.androidx.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     testImplementation(libs.junit)
 

@@ -33,20 +33,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.example.weatherapp.R
-import com.example.weatherapp.domain.fetchLocations
 import com.example.weatherapp.navigation.NavigationItem
 import com.example.weatherapp.ui.theme.Colors
 import com.example.weatherapp.ui.theme.Dimens
 import com.example.weatherapp.ui.theme.FontSizes
 
 @Composable
-fun MainScreen(navController: NavHostController) {
+fun MainScreen(navController: NavHostController, weatherViewModel: WeatherViewModel) {
     var searchQuery by remember { mutableStateOf("") }
     MainScreenContent(
         searchQuery = searchQuery,
         onQueryEntered = { newQuery -> searchQuery = newQuery },
         onButtonClick = {
-            fetchLocations()
+            weatherViewModel.fetchLocations()
             navController.navigate(NavigationItem.Details.getRoute(searchQuery))
         }
     )

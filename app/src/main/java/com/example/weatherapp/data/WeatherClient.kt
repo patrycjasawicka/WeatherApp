@@ -13,7 +13,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 // todo make interface and inject with koin
 object WeatherClient {
     // todo this can also be injected
-    private const val BASE_URL = "http://dataservice.accuweather.com/"
+    private const val BASE_URL = "https://dataservice.accuweather.com/"
 
     val apiKeyInterceptor = Interceptor { chain ->
         val originalRequest: Request = chain.request()
@@ -31,7 +31,7 @@ object WeatherClient {
     }
 
     private val loggingInterceptor: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY // Set the desired log level
+        level = HttpLoggingInterceptor.Level.BODY
     }
 
     private val okHttpClient = OkHttpClient.Builder()
