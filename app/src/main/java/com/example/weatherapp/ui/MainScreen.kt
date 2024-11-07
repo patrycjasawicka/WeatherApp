@@ -37,8 +37,10 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.weatherapp.R
+import com.example.weatherapp.domain.Hint
 import com.example.weatherapp.navigation.NavigationItem
 import com.example.weatherapp.ui.theme.Colors
 import com.example.weatherapp.ui.theme.Dimens
@@ -50,6 +52,7 @@ fun MainScreen(navController: NavHostController, weatherViewModel: WeatherViewMo
     var searchQuery by remember { mutableStateOf("") }
     var debouncedQuery by remember { mutableStateOf("") }
     val items by weatherViewModel.items.collectAsState()
+    val locationIsSelected = weatherViewModel.locationIsSelected.value
 
     LaunchedEffect(searchQuery) {
         delay(500)
@@ -63,9 +66,14 @@ fun MainScreen(navController: NavHostController, weatherViewModel: WeatherViewMo
     MainScreenContent(
         searchQuery = searchQuery,
         onQueryEntered = { newQuery -> searchQuery = newQuery },
-        onHintSelected = {hint -> searchQuery = hint},
+        onHintSelected = { hint ->
+            weatherViewModel.setSelectedLocation(hint)
+            searchQuery = hint.localizedName
+        },
         items = items,
+        locationIsSelected = locationIsSelected,
         onButtonClick = {
+            weatherViewModel.fetchCurrentConditions()
             navController.navigate(NavigationItem.Details.getRoute(searchQuery))
         }
     )
@@ -75,8 +83,9 @@ fun MainScreen(navController: NavHostController, weatherViewModel: WeatherViewMo
 fun MainScreenContent(
     searchQuery: String,
     onQueryEntered: (String) -> Unit,
-    onHintSelected: (String) -> Unit,
-    items: List<String>,
+    onHintSelected: (Hint) -> Unit,
+    items: List<Hint>,
+    locationIsSelected: Boolean,
     onButtonClick: () -> Unit
 ) {
     BoxWithConstraints(
@@ -135,6 +144,7 @@ fun MainScreenContent(
 
             Button(
                 onClick = onButtonClick,
+                enabled = locationIsSelected,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = Dimens.Medium),
@@ -156,8 +166,8 @@ fun MainScreenContent(
 fun DropdownTextField(
     searchQuery: String,
     onQueryEntered: (String) -> Unit,
-    onHintSelected: (String) -> Unit,
-    items: List<String>
+    onHintSelected: (Hint) -> Unit,
+    items: List<Hint>
 ) {
     Column(modifier = Modifier.padding(horizontal = Dimens.Medium)) {
 
@@ -177,7 +187,7 @@ fun DropdownTextField(
 
         LazyColumn(modifier = Modifier.height(160.dp)) {
             items(items) { item ->
-                Text(text = item, modifier = Modifier
+                Text(text = item.localizedName, modifier = Modifier
                     .padding(8.dp)
                     .clickable { onHintSelected(item) })
             }
@@ -188,5 +198,5 @@ fun DropdownTextField(
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
-    MainScreenContent(searchQuery = "Warsaw", {}, {}, emptyList(), {})
+    MainScreenContent(searchQuery = "Warsaw", {}, {}, emptyList(), true, {})
 }

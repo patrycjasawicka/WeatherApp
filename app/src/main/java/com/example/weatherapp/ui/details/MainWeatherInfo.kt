@@ -16,15 +16,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherapp.R
+import com.example.weatherapp.data.model.Temperature
 import com.example.weatherapp.ui.theme.Dimens.Small
 
 @Composable
-internal fun MainWeatherInfo(city: String) {
+internal fun MainWeatherInfo(city: String, temperature: Double, weatherIcon: Int) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(id = R.drawable.ic_sunny_and_cloudy),
+            painter = painterResource(id = weatherIcon),
             contentDescription = "Weather Icon",
             modifier = Modifier.size(100.dp),
             contentScale = ContentScale.Fit
@@ -33,7 +34,7 @@ internal fun MainWeatherInfo(city: String) {
         Spacer(modifier = Modifier.height(Small))
 
         Text(
-            text = "19°C",
+            text = "$temperature °C",
             color = Color.White,
             fontSize = 48.sp,
             fontWeight = FontWeight.Bold
@@ -45,14 +46,6 @@ internal fun MainWeatherInfo(city: String) {
             text = city,
             color = Color.White,
             fontSize = 20.sp
-        )
-
-        Spacer(modifier = Modifier.height(Small/2))
-
-        Text(
-            text = "Max: 66.2°  Min: 44°",
-            color = Color.White.copy(alpha = 0.8f),
-            fontSize = 14.sp
         )
     }
 }
