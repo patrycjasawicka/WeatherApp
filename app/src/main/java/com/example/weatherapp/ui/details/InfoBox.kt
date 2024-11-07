@@ -20,7 +20,7 @@ import com.example.weatherapp.ui.theme.Dimens.Small
 
 
 @Composable
-internal fun InfoBox(label: String, value: String, subText: String, modifier: Modifier) {
+internal fun InfoBox(label: String, value: String, subText: String = "", modifier: Modifier) {
     Column(
         modifier = modifier
             .background(Color(0xFF3E2286), shape = RoundedCornerShape(RoundedCornersSize))
@@ -40,7 +40,7 @@ internal fun InfoBox(label: String, value: String, subText: String, modifier: Mo
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold
         )
-        Spacer(modifier = Modifier.height(Small/2))
+        Spacer(modifier = Modifier.height(Small / 2))
         Text(
             text = subText,
             color = Color.White.copy(alpha = 0.7f),

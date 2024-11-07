@@ -10,22 +10,21 @@ import androidx.compose.ui.Modifier
 import com.example.weatherapp.ui.theme.Dimens.Small
 
 @Composable
-internal fun AdditionalWeatherInfo() {
+internal fun AdditionalWeatherInfo(uvIndex: Int, uvIndexText: String, relativeHumidity: Int) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         InfoBox(
-            label = "Air Quality",
-            value = "5:23 AM",
-            subText = "Sunset 7:23 PM",
+            label = "Humidity",
+            value = "${relativeHumidity}%",
             modifier = Modifier.weight(1f)
         )
         Spacer(modifier = Modifier.width(Small))
         InfoBox(
             label = "UV Index",
-            value = "4",
-            subText = "Moderate",
+            value = uvIndex.toString(),
+            subText = uvIndexText,
             modifier = Modifier.weight(1f)
         )
     }

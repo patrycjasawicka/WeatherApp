@@ -12,7 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.weatherapp.ui.details.AdditionalWeatherInfo
-import com.example.weatherapp.ui.details.AirQuality
+import com.example.weatherapp.ui.details.Pressure
 import com.example.weatherapp.ui.details.DayWeatherForecast
 import com.example.weatherapp.ui.details.MainWeatherInfo
 import com.example.weatherapp.ui.details.WeekWeatherForecast
@@ -47,12 +47,14 @@ fun DetailsScreen(city: String, weatherViewModel: WeatherViewModel) {
 
         WeekWeatherForecast()
 
-        Spacer(modifier = Modifier.height(Large))
+        currentConditions?.let { conditions ->
+            Spacer(modifier = Modifier.height(Large))
 
-        AirQuality()
+            Pressure(conditions.pressure)
 
-        Spacer(modifier = Modifier.height(Medium))
+            Spacer(modifier = Modifier.height(Medium))
 
-        AdditionalWeatherInfo()
+            AdditionalWeatherInfo(conditions.uvIndex, conditions.uvIndexText, conditions.relativeHumidity)
+        }
     }
 }
