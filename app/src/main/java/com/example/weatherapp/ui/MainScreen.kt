@@ -53,7 +53,7 @@ val polishCharsRegex = "^[a-zA-ZąćęłńóśżźĄĆĘŁŃÓŚŻŹ]*$".toRegex
 fun MainScreen(navController: NavHostController, weatherViewModel: WeatherViewModel) {
     var searchQuery by remember { mutableStateOf("") }
     var debouncedQuery by remember { mutableStateOf("") }
-    val items by weatherViewModel.items.collectAsState()
+    val items by weatherViewModel.hints.collectAsState()
     val locationIsSelected = weatherViewModel.locationIsSelected.value
 
     LaunchedEffect(searchQuery) {
@@ -68,12 +68,12 @@ fun MainScreen(navController: NavHostController, weatherViewModel: WeatherViewMo
     MainScreenContent(
         searchQuery = searchQuery,
         onQueryEntered = { newQuery ->
-            if (newQuery.matches(polishCharsRegex)) {
-                searchQuery = newQuery
-            }
+//            if (newQuery.matches(polishCharsRegex)) {
+            searchQuery = newQuery
+//            }
         },
         onHintSelected = { hint ->
-            weatherViewModel.setSelectedLocation(hint)
+            weatherViewModel.onHintSelected(hint)
             searchQuery = hint.localizedName
         },
         items = items,
@@ -193,9 +193,12 @@ fun DropdownTextField(
 
         LazyColumn(modifier = Modifier.fillMaxHeight(0.3f)) {
             items(items) { item ->
-                Text(text = item.localizedName, modifier = Modifier
-                    .padding(8.dp)
-                    .clickable { onHintSelected(item) })
+                Text(
+                    text = item.localizedName, modifier = Modifier
+                        .padding(8.dp)
+                        .clickable { onHintSelected(item) },
+                    color = if (item.isHistorical) Color.DarkGray else Color.Unspecified
+                )
             }
         }
     }

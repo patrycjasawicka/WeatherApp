@@ -6,6 +6,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.weatherapp.domain.HintHistoryRepository
 import com.example.weatherapp.domain.ModelMapper
 import com.example.weatherapp.domain.WeatherRepository
 import com.example.weatherapp.domain.model.CurrentConditions
@@ -13,20 +14,27 @@ import com.example.weatherapp.domain.model.DailyForecast
 import com.example.weatherapp.domain.model.Hint
 import com.example.weatherapp.domain.model.HourlyWeatherForecasts
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
     private val weatherRepository: WeatherRepository,
-    private val modelMapper: ModelMapper
-) :
-    ViewModel() {
+    private val modelMapper: ModelMapper,
+    private val hintHistoryRepository: HintHistoryRepository
+) : ViewModel() {
 
-    private val _items = MutableStateFlow<List<Hint>>(emptyList())
-    val items: StateFlow<List<Hint>> = _items
+    private val _hints = MutableStateFlow<List<Hint>>(emptyList())
+    val hints: StateFlow<List<Hint>> = _hints
 
     private val _selectedLocation = mutableStateOf<Hint?>(null)
     val locationIsSelected: State<Boolean> = derivedStateOf {
@@ -44,16 +52,30 @@ class WeatherViewModel @Inject constructor(
 
     fun fetchLocations(query: String) {
         viewModelScope.launch {
+            val historicalHints = hintHistoryRepository.getHints().first()
             val result = weatherRepository.fetchLocations(query)
             if (result.isSuccess) {
-                _items.value = result.getOrDefault(emptyList()).map(modelMapper::formattedName)
+                val mappedLocations = result.getOrDefault(emptyList()).map(modelMapper::formattedName)
+                _hints.value = historicalHints + mappedLocations
             } else {
                 Log.e("WeatherViewModel", "error getting locations")
             }
         }
     }
 
-    fun setSelectedLocation(hint: Hint) {
+    fun onHintSelected(hint: Hint) {
+        setSelectedLocation(hint)
+        saveHintInHistory(hint)
+    }
+
+    private fun saveHintInHistory(hint: Hint) {
+        viewModelScope.launch {
+            val annotatedHint = hint.copy(isHistorical = true)
+            hintHistoryRepository.saveHint(annotatedHint)
+        }
+    }
+
+    private fun setSelectedLocation(hint: Hint) {
         _selectedLocation.value = hint
     }
 
@@ -70,7 +92,8 @@ class WeatherViewModel @Inject constructor(
                     weatherRepository.fetchCurrentConditions(selectedLocation.locationKey)
                 if (result.isSuccess) {
                     _currentConditons.value =
-                        result.getOrDefault(null)?.firstOrNull()?.let(modelMapper::toCurrentConditions)
+                        result.getOrDefault(null)?.firstOrNull()
+                            ?.let(modelMapper::toCurrentConditions)
                 } else {
                     Log.e(
                         "WeatherViewModel",
