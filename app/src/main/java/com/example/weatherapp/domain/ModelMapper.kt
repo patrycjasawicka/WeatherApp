@@ -63,6 +63,6 @@ class ModelMapper @Inject constructor(private val iconsMapper: WeatherIconsMappe
     private fun formatDate(dateTime: String): String {
         val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
         val zonedDateTime = ZonedDateTime.parse(dateTime, formatter)
-        return zonedDateTime.format(DateTimeFormatter.ofPattern("MMMM, dd"))
+        return zonedDateTime.format(DateTimeFormatter.ofPattern("dd.MM"))
     }
 }

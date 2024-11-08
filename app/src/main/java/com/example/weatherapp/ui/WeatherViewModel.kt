@@ -52,14 +52,28 @@ class WeatherViewModel @Inject constructor(
 
     fun fetchLocations(query: String) {
         viewModelScope.launch {
-            val historicalHints = hintHistoryRepository.getHints().first()
-            val result = weatherRepository.fetchLocations(query)
-            if (result.isSuccess) {
-                val mappedLocations = result.getOrDefault(emptyList()).map(modelMapper::formattedName)
-                _hints.value = historicalHints + mappedLocations
+            val historicalHints = hintHistoryRepository.getHints()
+                    .first()
+                    .filterNot { it.localizedName == query }
+            if (query.isNotEmpty()) {
+                handleFetchingLocations(query, historicalHints)
             } else {
-                Log.e("WeatherViewModel", "error getting locations")
+                _hints.value = historicalHints
             }
+        }
+    }
+
+    private suspend fun handleFetchingLocations(
+        query: String,
+        historicalHints: List<Hint>
+    ) {
+        val result = weatherRepository.fetchLocations(query)
+        if (result.isSuccess) {
+            val mappedLocations =
+                result.getOrDefault(emptyList()).map(modelMapper::formattedName)
+            _hints.value = historicalHints + mappedLocations
+        } else {
+            Log.e("WeatherViewModel", "error getting locations")
         }
     }
 

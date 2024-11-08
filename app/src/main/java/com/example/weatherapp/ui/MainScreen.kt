@@ -47,7 +47,7 @@ import com.example.weatherapp.ui.theme.Dimens
 import com.example.weatherapp.ui.theme.FontSizes
 import kotlinx.coroutines.delay
 
-val polishCharsRegex = "^[a-zA-ZąćęłńóśżźĄĆĘŁŃÓŚŻŹ]*$".toRegex()
+val polishCharsRegex = "^[a-zA-ZąćęłńóśżźĄĆĘŁŃÓŚŻŹ(), ]*$".toRegex()
 
 @Composable
 fun MainScreen(navController: NavHostController, weatherViewModel: WeatherViewModel) {
@@ -68,9 +68,9 @@ fun MainScreen(navController: NavHostController, weatherViewModel: WeatherViewMo
     MainScreenContent(
         searchQuery = searchQuery,
         onQueryEntered = { newQuery ->
-//            if (newQuery.matches(polishCharsRegex)) {
-            searchQuery = newQuery
-//            }
+            if (newQuery.matches(polishCharsRegex)) {
+                searchQuery = newQuery
+            }
         },
         onHintSelected = { hint ->
             weatherViewModel.onHintSelected(hint)

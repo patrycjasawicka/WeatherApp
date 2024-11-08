@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class HintHistoryRepository@Inject constructor(@ApplicationContext private val context: Context) {
+class HintHistoryRepository @Inject constructor(@ApplicationContext private val context: Context) {
 
     private val Context.dataStore by preferencesDataStore(name = "hint_history")
     private val hintListKey = stringPreferencesKey("hint_list")
@@ -34,6 +34,9 @@ class HintHistoryRepository@Inject constructor(@ApplicationContext private val c
 
     suspend fun saveHint(hint: Hint) {
         val currentList = getHints().firstOrNull() ?: emptyList()
+        if (currentList.contains(hint)) {
+            return
+        }
         val updatedList = currentList.toMutableList().apply {
             add(hint)
         }
