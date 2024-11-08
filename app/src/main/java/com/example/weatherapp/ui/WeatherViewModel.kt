@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.domain.ModelMapper
 import com.example.weatherapp.domain.WeatherRepository
 import com.example.weatherapp.domain.model.CurrentConditions
+import com.example.weatherapp.domain.model.DailyForecast
 import com.example.weatherapp.domain.model.Hint
 import com.example.weatherapp.domain.model.HourlyWeatherForecasts
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,6 +39,9 @@ class WeatherViewModel @Inject constructor(
     private val _hourlyForecast = MutableStateFlow<HourlyWeatherForecasts?>(null)
     val hourlyForecast: StateFlow<HourlyWeatherForecasts?> = _hourlyForecast
 
+    private val _dailyForecast = MutableStateFlow<List<DailyForecast>>(emptyList())
+    val dailyForecast: StateFlow<List<DailyForecast>?> = _dailyForecast
+
     fun fetchLocations(query: String) {
         viewModelScope.launch {
             val result = weatherRepository.fetchLocations(query)
@@ -56,6 +60,7 @@ class WeatherViewModel @Inject constructor(
     fun fetchDetails() {
         fetchCurrentConditions()
         fetchHourlyForecasts()
+        getWeekForecast()
     }
 
     private fun fetchCurrentConditions() {
@@ -87,7 +92,25 @@ class WeatherViewModel @Inject constructor(
                 } else {
                     Log.e(
                         "WeatherViewModel",
-                        "error fetching forecasts"
+                        "error fetching hourly forecasts"
+                    )
+                }
+            }
+        }
+    }
+
+    private fun getWeekForecast() {
+        viewModelScope.launch {
+            _selectedLocation.value?.let { selectedLocation ->
+                val result =
+                    weatherRepository.fetchDailyForecasts(selectedLocation.locationKey)
+                if (result.isSuccess) {
+                    _dailyForecast.value =
+                        result.getOrNull()?.let(modelMapper::toWeekForecast) ?: emptyList()
+                } else {
+                    Log.e(
+                        "WeatherViewModel",
+                        "error fetching daily forecasts"
                     )
                 }
             }

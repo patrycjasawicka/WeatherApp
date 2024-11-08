@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -12,12 +14,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.weatherapp.R
+import com.example.weatherapp.domain.model.DailyForecast
 import com.example.weatherapp.ui.theme.Dimens.Medium
 
 @Composable
-internal fun WeekWeatherForecast() {
+internal fun WeekWeatherForecast(forecast: List<DailyForecast>) {
     Text(
-        text = "7-Days Forecasts",
+        text = "5-Days Forecasts",
         color = Color.White,
         fontSize = 20.sp,
         fontWeight = FontWeight.Bold
@@ -25,13 +28,16 @@ internal fun WeekWeatherForecast() {
 
     Spacer(modifier = Modifier.height(Medium))
 
-    Row(
+    LazyRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        ForecastDayItem(dayOrTime = "Mon", temperature = "20°C", iconId = R.drawable.ic_sunny)
-        ForecastDayItem(dayOrTime = "Tue", temperature = "20°C", iconId = R.drawable.ic_sunny)
-        ForecastDayItem(dayOrTime = "Wed", temperature = "20°C", iconId = R.drawable.ic_sunny)
-        ForecastDayItem(dayOrTime = "Thu", temperature = "20°C", iconId = R.drawable.ic_sunny)
+        items(forecast) { item ->
+            ForecastDayItem(
+                dayOrTime = item.date,
+                temperature = "${item.temperatureMax}°C",
+                iconId = item.dayIcon
+            )
+        }
     }
 }

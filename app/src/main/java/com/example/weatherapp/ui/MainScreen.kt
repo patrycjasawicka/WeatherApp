@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -46,6 +47,8 @@ import com.example.weatherapp.ui.theme.Dimens
 import com.example.weatherapp.ui.theme.FontSizes
 import kotlinx.coroutines.delay
 
+val polishCharsRegex = "^[a-zA-ZąćęłńóśżźĄĆĘŁŃÓŚŻŹ]*$".toRegex()
+
 @Composable
 fun MainScreen(navController: NavHostController, weatherViewModel: WeatherViewModel) {
     var searchQuery by remember { mutableStateOf("") }
@@ -64,7 +67,11 @@ fun MainScreen(navController: NavHostController, weatherViewModel: WeatherViewMo
 
     MainScreenContent(
         searchQuery = searchQuery,
-        onQueryEntered = { newQuery -> searchQuery = newQuery },
+        onQueryEntered = { newQuery ->
+            if (newQuery.matches(polishCharsRegex)) {
+                searchQuery = newQuery
+            }
+        },
         onHintSelected = { hint ->
             weatherViewModel.setSelectedLocation(hint)
             searchQuery = hint.localizedName
@@ -114,7 +121,7 @@ fun MainScreenContent(
                 tint = Color.Unspecified,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(screenHeight / 2)
+                    .height(screenHeight / 3)
             )
 
             Spacer(modifier = Modifier.height(Dimens.Large))
@@ -184,7 +191,7 @@ fun DropdownTextField(
             )
         )
 
-        LazyColumn(modifier = Modifier.height(160.dp)) {
+        LazyColumn(modifier = Modifier.fillMaxHeight(0.3f)) {
             items(items) { item ->
                 Text(text = item.localizedName, modifier = Modifier
                     .padding(8.dp)

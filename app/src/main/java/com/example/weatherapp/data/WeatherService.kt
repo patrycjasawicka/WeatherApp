@@ -4,6 +4,7 @@ package com.example.weatherapp.data
 import com.example.weatherapp.data.model.CurrentConditions
 import com.example.weatherapp.data.model.HourlyWeatherForecast
 import com.example.weatherapp.data.model.Location
+import com.example.weatherapp.data.model.WeekWeatherForecast
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -23,4 +24,10 @@ interface WeatherService {
         @Path("locationKey") locationKey: String,
         @Query("metric") metricValues: Boolean = true
     ): List<HourlyWeatherForecast>
+
+    @GET("forecasts/v1/daily/5day/{locationKey}")
+    suspend fun getWeekForecast(
+        @Path("locationKey") locationKey: String,
+        @Query("metric") metricValues: Boolean = true
+    ): WeekWeatherForecast
 }

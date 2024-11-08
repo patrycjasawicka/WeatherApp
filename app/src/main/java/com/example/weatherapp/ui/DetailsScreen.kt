@@ -25,7 +25,8 @@ import com.example.weatherapp.ui.theme.Dimens.Medium
 fun DetailsScreen(city: String, weatherViewModel: WeatherViewModel) {
 
     val currentConditions by weatherViewModel.currentConditions.collectAsState()
-    val dailyForecast by weatherViewModel.hourlyForecast.collectAsState()
+    val hourlyForecast by weatherViewModel.hourlyForecast.collectAsState()
+    val weekForecast by weatherViewModel.dailyForecast.collectAsState()
 
     Column(
         modifier = Modifier
@@ -42,13 +43,15 @@ fun DetailsScreen(city: String, weatherViewModel: WeatherViewModel) {
 
         Spacer(modifier = Modifier.height(ExtraLarge))
 
-        dailyForecast?.let { forecast ->
+        hourlyForecast?.let { forecast ->
             DayWeatherForecast(forecast)
         }
 
         Spacer(modifier = Modifier.height(Medium))
 
-        WeekWeatherForecast()
+        weekForecast?.let { forecast ->
+            WeekWeatherForecast(forecast)
+        }
 
         currentConditions?.let { conditions ->
             Spacer(modifier = Modifier.height(Large))
