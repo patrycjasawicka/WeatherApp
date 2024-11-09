@@ -54,7 +54,7 @@ fun DetailsScreen(city: String, weatherViewModel: WeatherViewModel) {
 
         Spacer(modifier = Modifier.height(Medium))
 
-        weekForecast?.let { forecast ->
+        weekForecast.takeIf { it.isNotEmpty() }?.let { forecast ->
             WeekWeatherForecast(forecast)
         }
 

@@ -43,7 +43,7 @@ class WeatherViewModel @Inject constructor(
     val hourlyForecast: StateFlow<HourlyWeatherForecasts?> = _hourlyForecast
 
     private val _dailyForecast = MutableStateFlow<List<DailyForecast>>(emptyList())
-    val dailyForecast: StateFlow<List<DailyForecast>?> = _dailyForecast
+    val dailyForecast: StateFlow<List<DailyForecast>> = _dailyForecast
 
     fun fetchLocations(query: String) {
         viewModelScope.launch {

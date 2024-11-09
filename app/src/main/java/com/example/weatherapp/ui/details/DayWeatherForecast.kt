@@ -33,7 +33,7 @@ internal fun DayWeatherForecast(dailyForecast: HourlyWeatherForecasts) {
             items(dailyForecast.hourlyForecasts) {
                 ForecastDayItem(
                     dayOrTime = it.dateTime,
-                    temperature = stringResource(R.string.temperature_value, it.temperature),
+                    temperature = it.temperature,
                     iconId = it.weatherIcon
                 )
             }

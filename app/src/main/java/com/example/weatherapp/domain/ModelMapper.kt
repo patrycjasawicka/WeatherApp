@@ -58,7 +58,7 @@ class ModelMapper @Inject constructor(private val iconsMapper: WeatherIconsMappe
         }
 
     private fun formatName(location: Location) =
-        "${location.localizedName} (${location.administrativeArea.localizedName}, ${location.country.localizedName}) "
+        "${location.localizedName} ${location.administrativeArea.localizedName} ${location.country.localizedName} "
 
     private fun formatTime(dateTime: String): String {
         val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME

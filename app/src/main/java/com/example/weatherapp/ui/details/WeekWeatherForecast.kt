@@ -36,7 +36,7 @@ internal fun WeekWeatherForecast(forecast: List<DailyForecast>) {
         items(forecast) { item ->
             ForecastDayItem(
                 dayOrTime = item.date,
-                temperature = stringResource(id = R.string.temperature_value, item.temperatureMax),
+                temperature = item.temperatureMax,
                 iconId = item.dayIcon
             )
         }

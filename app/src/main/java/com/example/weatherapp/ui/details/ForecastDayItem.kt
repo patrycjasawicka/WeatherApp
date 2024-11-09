@@ -19,20 +19,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherapp.R
+import com.example.weatherapp.ui.TemperatureUtils
 import com.example.weatherapp.ui.theme.Dimens.ForecastDayItemWidth
 import com.example.weatherapp.ui.theme.Dimens.IconSize
 import com.example.weatherapp.ui.theme.Dimens.Small
 
 
 @Composable
-internal fun ForecastDayItem(dayOrTime: String, temperature: String, iconId: Int) {
+internal fun ForecastDayItem(dayOrTime: String, temperature: Double, iconId: Int) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.width(ForecastDayItemWidth)
     ) {
         Text(
-            text = temperature,
-            color = Color.White,
+            text = stringResource(R.string.temperature_value, temperature),
+            color = TemperatureUtils.getColorBasedOnTemperature(temperature),
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
         )
