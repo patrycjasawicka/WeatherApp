@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.weatherapp.R
+import com.example.weatherapp.domain.RegexUtils
 import com.example.weatherapp.domain.model.Hint
 import com.example.weatherapp.navigation.NavigationItem
 import com.example.weatherapp.ui.theme.Colors
@@ -47,13 +48,11 @@ import com.example.weatherapp.ui.theme.Dimens
 import com.example.weatherapp.ui.theme.FontSizes
 import kotlinx.coroutines.delay
 
-val polishCharsRegex = "^[a-zA-ZąćęłńóśżźĄĆĘŁŃÓŚŻŹ(), ]*$".toRegex()
-
 @Composable
 fun MainScreen(navController: NavHostController, weatherViewModel: WeatherViewModel) {
     var searchQuery by remember { mutableStateOf("") }
     var debouncedQuery by remember { mutableStateOf("") }
-    val items by weatherViewModel.hints.collectAsState()
+    val hints by weatherViewModel.hints.collectAsState()
     val locationIsSelected = weatherViewModel.locationIsSelected.value
 
     LaunchedEffect(searchQuery) {
@@ -68,7 +67,7 @@ fun MainScreen(navController: NavHostController, weatherViewModel: WeatherViewMo
     MainScreenContent(
         searchQuery = searchQuery,
         onQueryEntered = { newQuery ->
-            if (newQuery.matches(polishCharsRegex)) {
+            if (newQuery.matches(RegexUtils.polishCharsRegex)) {
                 searchQuery = newQuery
             }
         },
@@ -76,7 +75,7 @@ fun MainScreen(navController: NavHostController, weatherViewModel: WeatherViewMo
             weatherViewModel.onHintSelected(hint)
             searchQuery = hint.localizedName
         },
-        items = items,
+        items = hints,
         locationIsSelected = locationIsSelected,
         onButtonClick = {
             weatherViewModel.fetchDetails()

@@ -9,13 +9,10 @@ import okhttp3.Request
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import javax.inject.Inject
 
-// todo make interface and inject with koin
-object WeatherClient {
-    // todo this can also be injected
-    private const val BASE_URL = "https://dataservice.accuweather.com/"
-
-    val apiKeyInterceptor = Interceptor { chain ->
+class WeatherClient @Inject constructor() {
+    private val apiKeyInterceptor = Interceptor { chain ->
         val originalRequest: Request = chain.request()
         val originalUrl = originalRequest.url
 
@@ -43,7 +40,7 @@ object WeatherClient {
 
     private val retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(Config.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()

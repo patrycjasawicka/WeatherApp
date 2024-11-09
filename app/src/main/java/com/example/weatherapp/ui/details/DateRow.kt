@@ -14,9 +14,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.weatherapp.R
 import com.example.weatherapp.ui.theme.Colors.DarkIndigo
 import com.example.weatherapp.ui.theme.Dimens.Medium
 import com.example.weatherapp.ui.theme.Dimens.Small
@@ -35,7 +37,7 @@ fun DateRow(date: String) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Today",
+                text = stringResource(R.string.today),
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold

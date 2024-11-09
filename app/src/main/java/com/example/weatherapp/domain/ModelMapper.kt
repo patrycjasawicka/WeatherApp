@@ -11,11 +11,14 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
+typealias DataHourlyWeatherForecast = com.example.weatherapp.data.model.HourlyWeatherForecast
+typealias DataCurrentConditions = com.example.weatherapp.data.model.CurrentConditions
+
 class ModelMapper @Inject constructor(private val iconsMapper: WeatherIconsMapper) {
-    fun toWeatherForecast(it: List<com.example.weatherapp.data.model.HourlyWeatherForecast>) =
+    fun toWeatherForecast(dataForecast: List<DataHourlyWeatherForecast>) =
         HourlyWeatherForecasts(
-            date = formatDate(it.first().dateTime),
-            hourlyForecasts = it.map {
+            date = formatDate(dataForecast.first().dateTime),
+            hourlyForecasts = dataForecast.map {
                 HourlyForecast(
                     dateTime = formatTime(it.dateTime),
                     weatherIcon = iconsMapper.getWeatherIcon(it.weatherIcon),
@@ -23,28 +26,28 @@ class ModelMapper @Inject constructor(private val iconsMapper: WeatherIconsMappe
                 )
             })
 
-    fun formattedName(it: Location) = Hint(
-        locationKey = it.key,
-        localizedName = "${it.localizedName} (${it.administrativeArea.LocalizedName}, ${it.country.LocalizedName}) "
+    fun formattedName(location: Location) = Hint(
+        locationKey = location.key,
+        localizedName = "${location.localizedName} (${location.administrativeArea.LocalizedName}, ${location.country.LocalizedName}) "
     )
 
-    fun toCurrentConditions(it: com.example.weatherapp.data.model.CurrentConditions) =
+    fun toCurrentConditions(currentConditions: DataCurrentConditions) =
         CurrentConditions(
-            weatherText = it.weatherText,
-            weatherIcon = iconsMapper.getWeatherIcon(it.weatherIcon),
-            hasPrecipitation = it.hasPrecipitation,
-            precipitationType = it.precipitationType,
-            isDayTime = it.isDayTime,
-            pressure = it.pressure.metric.value,
-            relativeHumidity = it.relativeHumidity,
-            temperature = it.temperature.metric.value,
-            uvIndex = it.uvIndex,
-            uvIndexText = it.uvIndexText,
-            wind = it.wind
+            weatherText = currentConditions.weatherText,
+            weatherIcon = iconsMapper.getWeatherIcon(currentConditions.weatherIcon),
+            hasPrecipitation = currentConditions.hasPrecipitation,
+            precipitationType = currentConditions.precipitationType,
+            isDayTime = currentConditions.isDayTime,
+            pressure = currentConditions.pressure.metric.value,
+            relativeHumidity = currentConditions.relativeHumidity,
+            temperature = currentConditions.temperature.metric.value,
+            uvIndex = currentConditions.uvIndex,
+            uvIndexText = currentConditions.uvIndexText,
+            wind = currentConditions.wind
         )
 
-    fun toWeekForecast(it: WeekWeatherForecast): List<DailyForecast> =
-        it.dailyForecasts.map {
+    fun toWeekForecast(weekWeatherForecast: WeekWeatherForecast): List<DailyForecast> =
+        weekWeatherForecast.dailyForecasts.map {
             DailyForecast(
                 date = formatDate(it.date),
                 dayIcon = iconsMapper.getWeatherIcon(it.day.icon),

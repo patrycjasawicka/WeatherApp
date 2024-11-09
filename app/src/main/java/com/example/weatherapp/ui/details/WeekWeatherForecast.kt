@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.weatherapp.R
@@ -20,7 +21,7 @@ import com.example.weatherapp.ui.theme.Dimens.Medium
 @Composable
 internal fun WeekWeatherForecast(forecast: List<DailyForecast>) {
     Text(
-        text = "5-Days Forecasts",
+        text = stringResource(R.string.week_forecast),
         color = Color.White,
         fontSize = 20.sp,
         fontWeight = FontWeight.Bold
@@ -35,7 +36,7 @@ internal fun WeekWeatherForecast(forecast: List<DailyForecast>) {
         items(forecast) { item ->
             ForecastDayItem(
                 dayOrTime = item.date,
-                temperature = "${item.temperatureMax}°C",
+                temperature = stringResource(id = R.string.temperature_value, item.temperatureMax),
                 iconId = item.dayIcon
             )
         }

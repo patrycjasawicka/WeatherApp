@@ -9,4 +9,7 @@ object Dimens {
     val ExtraLarge = 32.dp
 
     val RoundedCornersSize = 12.dp
+    val ForecastDayItemWidth = 72.dp
+    val IconSize = 40.dp
+    val IconSizeBig = 100.dp
 }

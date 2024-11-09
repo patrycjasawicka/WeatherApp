@@ -13,10 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.weatherapp.R
+import com.example.weatherapp.ui.theme.Dimens.ForecastDayItemWidth
+import com.example.weatherapp.ui.theme.Dimens.IconSize
 import com.example.weatherapp.ui.theme.Dimens.Small
 
 
@@ -24,7 +28,7 @@ import com.example.weatherapp.ui.theme.Dimens.Small
 internal fun ForecastDayItem(dayOrTime: String, temperature: String, iconId: Int) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.width(72.dp)
+        modifier = Modifier.width(ForecastDayItemWidth)
     ) {
         Text(
             text = temperature,
@@ -35,8 +39,8 @@ internal fun ForecastDayItem(dayOrTime: String, temperature: String, iconId: Int
         Spacer(modifier = Modifier.height(Small))
         Image(
             painter = painterResource(id = iconId),
-            contentDescription = "Weather Icon",
-            modifier = Modifier.size(40.dp),
+            contentDescription = stringResource(id = R.string.weather_icon),
+            modifier = Modifier.size(IconSize),
             contentScale = ContentScale.Fit
         )
         Spacer(modifier = Modifier.height(Small))

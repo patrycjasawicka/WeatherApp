@@ -14,15 +14,9 @@ import com.example.weatherapp.domain.model.DailyForecast
 import com.example.weatherapp.domain.model.Hint
 import com.example.weatherapp.domain.model.HourlyWeatherForecasts
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -41,8 +35,8 @@ class WeatherViewModel @Inject constructor(
         _selectedLocation.value != null
     }
 
-    private val _currentConditons = MutableStateFlow<CurrentConditions?>(null)
-    val currentConditions: StateFlow<CurrentConditions?> = _currentConditons
+    private val _currentConditions = MutableStateFlow<CurrentConditions?>(null)
+    val currentConditions: StateFlow<CurrentConditions?> = _currentConditions
 
     private val _hourlyForecast = MutableStateFlow<HourlyWeatherForecasts?>(null)
     val hourlyForecast: StateFlow<HourlyWeatherForecasts?> = _hourlyForecast
@@ -63,6 +57,17 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
+    fun onHintSelected(hint: Hint) {
+        setSelectedLocation(hint)
+        saveHintInHistory(hint)
+    }
+
+    fun fetchDetails() {
+        fetchCurrentConditions()
+        fetchHourlyForecasts()
+        getWeekForecast()
+    }
+
     private suspend fun handleFetchingLocations(
         query: String,
         historicalHints: List<Hint>
@@ -77,11 +82,6 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
-    fun onHintSelected(hint: Hint) {
-        setSelectedLocation(hint)
-        saveHintInHistory(hint)
-    }
-
     private fun saveHintInHistory(hint: Hint) {
         viewModelScope.launch {
             val annotatedHint = hint.copy(isHistorical = true)
@@ -93,19 +93,13 @@ class WeatherViewModel @Inject constructor(
         _selectedLocation.value = hint
     }
 
-    fun fetchDetails() {
-        fetchCurrentConditions()
-        fetchHourlyForecasts()
-        getWeekForecast()
-    }
-
     private fun fetchCurrentConditions() {
         viewModelScope.launch {
             _selectedLocation.value?.let { selectedLocation ->
                 val result =
                     weatherRepository.fetchCurrentConditions(selectedLocation.locationKey)
                 if (result.isSuccess) {
-                    _currentConditons.value =
+                    _currentConditions.value =
                         result.getOrDefault(null)?.firstOrNull()
                             ?.let(modelMapper::toCurrentConditions)
                 } else {

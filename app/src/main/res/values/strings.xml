@@ -5,4 +5,12 @@
     <string name="forecasts">Forecasts</string>
     <string name="city">City (eg. Warsaw)</string>
     <string name="check_weather">Check weather</string>
+    <string name="humidity">Humidity</string>
+    <string name="uv_index">UV Index</string>
+    <string name="humidity_percentage">%1$s %%</string>
+    <string name="today">Today</string>
+    <string name="temperature_value">%1$s°C</string>
+    <string name="pressure">Pressure</string>
+    <string name="pressure_value">%1$s hPa</string>
+    <string name="week_forecast">5-Days Forecasts</string>
 </resources>

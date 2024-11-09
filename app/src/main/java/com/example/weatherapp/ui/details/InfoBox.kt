@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import com.example.weatherapp.ui.theme.Colors.DarkIndigo
 import com.example.weatherapp.ui.theme.Dimens.Medium
 import com.example.weatherapp.ui.theme.Dimens.RoundedCornersSize
 import com.example.weatherapp.ui.theme.Dimens.Small
@@ -23,7 +24,7 @@ import com.example.weatherapp.ui.theme.Dimens.Small
 internal fun InfoBox(label: String, value: String, subText: String = "", modifier: Modifier) {
     Column(
         modifier = modifier
-            .background(Color(0xFF3E2286), shape = RoundedCornerShape(RoundedCornersSize))
+            .background(DarkIndigo, shape = RoundedCornerShape(RoundedCornersSize))
             .padding(Medium),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

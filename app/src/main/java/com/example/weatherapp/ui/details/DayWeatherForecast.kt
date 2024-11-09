@@ -11,7 +11,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import com.example.weatherapp.R
 import com.example.weatherapp.domain.model.HourlyWeatherForecasts
+import com.example.weatherapp.ui.theme.Colors.DarkIndigo
 import com.example.weatherapp.ui.theme.Dimens.Medium
 import com.example.weatherapp.ui.theme.Dimens.RoundedCornersSize
 
@@ -20,7 +23,7 @@ internal fun DayWeatherForecast(dailyForecast: HourlyWeatherForecasts) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFF3E2286), shape = RoundedCornerShape(RoundedCornersSize))
+            .background(DarkIndigo, shape = RoundedCornerShape(RoundedCornersSize))
             .padding(Medium)
     ) {
         DateRow(dailyForecast.date)
@@ -28,7 +31,11 @@ internal fun DayWeatherForecast(dailyForecast: HourlyWeatherForecasts) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             items(dailyForecast.hourlyForecasts) {
-                ForecastDayItem(dayOrTime = it.dateTime, temperature = "${it.temperature}°C", iconId = it.weatherIcon)
+                ForecastDayItem(
+                    dayOrTime = it.dateTime,
+                    temperature = stringResource(R.string.temperature_value, it.temperature),
+                    iconId = it.weatherIcon
+                )
             }
         }
     }

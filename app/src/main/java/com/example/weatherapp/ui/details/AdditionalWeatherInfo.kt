@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.example.weatherapp.R
 import com.example.weatherapp.ui.theme.Dimens.Small
 
 @Composable
@@ -16,13 +18,13 @@ internal fun AdditionalWeatherInfo(uvIndex: Int, uvIndexText: String, relativeHu
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         InfoBox(
-            label = "Humidity",
-            value = "${relativeHumidity}%",
+            label = stringResource(R.string.humidity),
+            value = stringResource(id = R.string.humidity_percentage, relativeHumidity),
             modifier = Modifier.weight(1f)
         )
         Spacer(modifier = Modifier.width(Small))
         InfoBox(
-            label = "UV Index",
+            label = stringResource(R.string.uv_index),
             value = uvIndex.toString(),
             subText = uvIndexText,
             modifier = Modifier.weight(1f)
