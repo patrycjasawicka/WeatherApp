@@ -17,6 +17,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -47,12 +48,12 @@ class WeatherViewModel @Inject constructor(
     fun fetchLocations(query: String) {
         viewModelScope.launch {
             val historicalHints = hintHistoryRepository.getHints()
-                    .first()
-                    .filterNot { it.localizedName == query }
+                .first()
+                .filterNot { it.localizedName == query }
             if (query.isNotEmpty()) {
                 handleFetchingLocations(query, historicalHints)
             } else {
-                _hints.value = historicalHints
+                _hints.update { historicalHints }
             }
         }
     }
@@ -75,8 +76,8 @@ class WeatherViewModel @Inject constructor(
         val result = weatherRepository.fetchLocations(query)
         if (result.isSuccess) {
             val mappedLocations =
-                result.getOrDefault(emptyList()).map(modelMapper::formattedName)
-            _hints.value = historicalHints + mappedLocations
+                result.getOrDefault(emptyList()).map(modelMapper::toHint)
+            _hints.update { historicalHints + mappedLocations }
         } else {
             Log.e("WeatherViewModel", "error getting locations")
         }
@@ -99,9 +100,10 @@ class WeatherViewModel @Inject constructor(
                 val result =
                     weatherRepository.fetchCurrentConditions(selectedLocation.locationKey)
                 if (result.isSuccess) {
-                    _currentConditions.value =
+                    _currentConditions.update {
                         result.getOrDefault(null)?.firstOrNull()
                             ?.let(modelMapper::toCurrentConditions)
+                    }
                 } else {
                     Log.e(
                         "WeatherViewModel",
@@ -118,8 +120,9 @@ class WeatherViewModel @Inject constructor(
                 val result =
                     weatherRepository.fetchHourlyForecasts(selectedLocation.locationKey)
                 if (result.isSuccess) {
-                    _hourlyForecast.value =
+                    _hourlyForecast.update {
                         result.getOrDefault(emptyList()).let(modelMapper::toWeatherForecast)
+                    }
                 } else {
                     Log.e(
                         "WeatherViewModel",
@@ -136,8 +139,9 @@ class WeatherViewModel @Inject constructor(
                 val result =
                     weatherRepository.fetchDailyForecasts(selectedLocation.locationKey)
                 if (result.isSuccess) {
-                    _dailyForecast.value =
+                    _dailyForecast.update {
                         result.getOrNull()?.let(modelMapper::toWeekForecast) ?: emptyList()
+                    }
                 } else {
                     Log.e(
                         "WeatherViewModel",
@@ -147,5 +151,4 @@ class WeatherViewModel @Inject constructor(
             }
         }
     }
-
 }

@@ -26,9 +26,9 @@ class ModelMapper @Inject constructor(private val iconsMapper: WeatherIconsMappe
                 )
             })
 
-    fun formattedName(location: Location) = Hint(
+    fun toHint(location: Location) = Hint(
         locationKey = location.key,
-        localizedName = "${location.localizedName} (${location.administrativeArea.LocalizedName}, ${location.country.LocalizedName}) "
+        localizedName = formatName(location)
     )
 
     fun toCurrentConditions(currentConditions: DataCurrentConditions) =
@@ -56,6 +56,9 @@ class ModelMapper @Inject constructor(private val iconsMapper: WeatherIconsMappe
                 temperatureMin = it.temperature.minimum.value
             )
         }
+
+    private fun formatName(location: Location) =
+        "${location.localizedName} (${location.administrativeArea.localizedName}, ${location.country.localizedName}) "
 
     private fun formatTime(dateTime: String): String {
         val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
