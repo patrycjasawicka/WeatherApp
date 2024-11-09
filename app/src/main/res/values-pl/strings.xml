@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WeatherApp</string>
+    <string name="weather_icon">Ikona pogody</string>
+    <string name="weather">Pogoda</string>
+    <string name="forecasts">Prognozy</string>
+    <string name="city">Miasto (np. Warszawa)</string>
+    <string name="check_weather">Sprawdź pogodę</string>
+    <string name="humidity">Wilgotność</string>
+    <string name="uv_index">Indeks UV</string>
+    <string name="humidity_percentage">%1$s %%</string>
+    <string name="today">Dzisiaj</string>
+    <string name="temperature_value">%1$s°C</string>
+    <string name="pressure">Ciśnienie</string>
+    <string name="pressure_value">%1$s hPa</string>
+    <string name="week_forecast">Prognoza na 5 dni</string>
+</resources>
